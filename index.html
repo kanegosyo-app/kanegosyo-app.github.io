@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>KaNegosyo App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self';
+      object-src 'none';
+      base-uri 'none';
+      frame-ancestors 'none';
+    ">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+
+<header class="app-header">
+  <h1>KaNegosyo App</h1>
+</header>
+
+<div class="search-bar">
+  <input
+    id="searchInput"
+    placeholder="Search name or date (e.g. Juan or 2024-02-01)"
+  >
+</div>
+
+
+<div class="summary">
+  <div>
+    <label>Your Base Capital</label>
+    <input id="totalCapital" readonly>
+  </div>
+</div>
+
+<div class="summary">
+  <label>Total Receivable:</label>
+  <input id="totalReceivable" readonly>
+</div>
+
+<div class="capital-actions vertical">
+  <button id="addCapitalBtn">Add Capital</button>
+  <button id="spendBtn">Spend</button>
+</div>
+
+
+<div class="tab-area">
+  <div class="tabs">
+    <button class="tab" data-tab="forDelivery">For Delivery</button>
+<button class="tab" data-tab="pending">Pending Delivery</button>
+
+    <button class="tab" data-tab="overdue">Overdue Delivery</button>
+    <button class="tab" data-tab="delivered">Delivered</button>
+  </div>
+
+  <div class="counts">
+    <input id="forDeliveryCount" readonly>
+    <input id="pendingCount" readonly>
+    <input id="overdueCount" readonly>
+    <input id="deliveredCount" readonly>
+  </div>
+</div>
+
+<section id="listSection"></section>
+
+<button id="floatingAddBtn">＋</button>
+
+
+<div class="modal hidden" id="entryModal">
+  <div class="modal-box">
+    <h3>New Entry</h3>
+
+    <input id="entryName" placeholder="Name">
+    <input type="date" id="entryDate">
+    <input type="number" id="entryAmount" placeholder="Amount">
+    <textarea id="entryDesc" placeholder="Description"></textarea>
+
+    <div class="modal-actions">
+      <button id="saveEntry">Save</button>
+      <button id="cancelEntry">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal hidden" id="capitalModal">
+  <div class="modal-box">
+    <h3 id="capitalTitle"></h3>
+    <input type="number" id="capitalInput">
+
+    <div class="modal-actions">
+      <button id="confirmCapital">Save</button>
+      <button id="cancelCapital">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal hidden" id="confirmModal">
+  <div class="modal-box">
+    <p id="confirmText"></p>
+    <div class="modal-actions">
+      <button id="confirmYes">Yes</button>
+      <button id="confirmNo">No</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
