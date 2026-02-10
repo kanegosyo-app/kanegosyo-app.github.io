@@ -131,6 +131,7 @@ section {
   height: 56px;
   font-size: 26px;
   border-radius: 50%;
+  background-color: var(--danger);
 }
 
 .modal {
@@ -182,7 +183,7 @@ section {
 #totalReceivable {
   border-radius: 5px;
   width: 130px;
-  background-color: var(--danger);
+  background-color: var(--great);
   font-weight: bold;
 }
 
@@ -399,6 +400,7 @@ button:active {
   height: 56px;
   font-size: 22px;
   border-radius: 50%;
+  background-color: var(--danger);
 }
 
 .toggle-box {
@@ -444,5 +446,43 @@ button:active {
 .item-area {
   font-size: 12px;
   opacity: 0.85;
+}
+
+
+.suggestions {
+  background: var(--panel);
+  border: 2px solid var(--bg);
+  border-top: none;
+  max-height: 140px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 20;
+}
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.suggestion-item:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.field-label {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  padding-right: 38px; 
 }
 

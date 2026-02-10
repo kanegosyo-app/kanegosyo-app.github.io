@@ -4,6 +4,10 @@ let capital = Number(localStorage.getItem('capital') || 0);
 let pending = JSON.parse(localStorage.getItem('pending') || '[]');
 let delivered = JSON.parse(localStorage.getItem('delivered') || '[]');
 let currentTab = 'forDelivery';
+let nameLibrary = JSON.parse(localStorage.getItem('nameLibrary') || '{}');
+let areaLibrary = JSON.parse(localStorage.getItem('areaLibrary') || '[]');
+const nameSuggestions = document.getElementById('nameSuggestions');
+const clearNameBtn = document.getElementById('clearNameBtn');
 let searchQuery = '';
 let sortByArea = JSON.parse(localStorage.getItem('sortByArea') || 'false');
 
@@ -18,8 +22,15 @@ function saveAll() {
 }
 
 function todayStr() {
-  return new Date().toISOString().split('T')[0];
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }
+
 function autoUpdateStatuses() {
   const today = todayStr();
 
@@ -223,25 +234,143 @@ document.querySelectorAll('.tab').forEach(t => {
 
 floatingAddBtn.onclick = () => {
   entryModal.classList.remove('hidden');
+  entryDate.value = todayStr();
+  clearNameBtn.classList.add('hidden');
+  entryName.focus();
 };
+
+entryName.addEventListener('input', () => {
+  clearNameBtn.classList.toggle('hidden', !entryName.value);
+  const q = entryName.value.trim().toLowerCase();
+  nameSuggestions.innerHTML = '';
+
+  if (!q) {
+    nameSuggestions.classList.add('hidden');
+    return;
+  }
+
+  const matches = Object.values(nameLibrary).filter(x =>
+    x.name.toLowerCase().includes(q)
+  );
+
+  if (!matches.length) {
+    nameSuggestions.classList.add('hidden');
+    return;
+  }
+
+  matches.forEach(data => {
+    const div = document.createElement('div');
+    div.className = 'suggestion-item';
+    div.textContent = data.name;
+
+    div.onclick = () => {
+      entryName.value = data.name;
+      entryDesc.value = data.desc || '';
+      entryArea.value = data.area || '';
+      nameSuggestions.classList.add('hidden');
+    };
+
+    nameSuggestions.appendChild(div);
+  });
+
+  nameSuggestions.classList.remove('hidden');
+});
+
+const areaSuggestions = document.getElementById('areaSuggestions');
+
+entryArea.addEventListener('input', () => {
+  const q = entryArea.value.trim().toLowerCase();
+  areaSuggestions.innerHTML = '';
+
+  if (!q) {
+    areaSuggestions.classList.add('hidden');
+    return;
+  }
+
+  const matches = areaLibrary.filter(a =>
+    a.toLowerCase().includes(q)
+  );
+
+  if (!matches.length) {
+    areaSuggestions.classList.add('hidden');
+    return;
+  }
+
+  matches.forEach(area => {
+    const div = document.createElement('div');
+    div.className = 'suggestion-item';
+    div.textContent = area;
+
+    div.onclick = () => {
+      entryArea.value = area;
+      areaSuggestions.classList.add('hidden');
+    };
+
+    areaSuggestions.appendChild(div);
+  });
+
+  areaSuggestions.classList.remove('hidden');
+});
+
+entryArea.addEventListener('blur', () => {
+  setTimeout(() => areaSuggestions.classList.add('hidden'), 150);
+});
+
+
+entryName.addEventListener('blur', () => {
+  setTimeout(() => nameSuggestions.classList.add('hidden'), 150);
+});
+
 
 cancelEntry.onclick = () => entryModal.classList.add('hidden');
 
 saveEntry.onclick = () => {
+  const name = entryName.value.trim();
+  const date = entryDate.value;
+
+  if (!name || !date) return;
+
   const item = {
-    name: entryName.value.trim(),
-    date: entryDate.value,
+    name,
+    date,
     amount: Number(entryAmount.value || 0),
     desc: entryDesc.value.trim(),
     area: entryArea.value.trim(),
-    status: 'pending' 
+    status: 'pending'
   };
 
-  if (!item.name || !item.date) return;
-
+  pending = pending.filter(x => x.name.toLowerCase() !== name.toLowerCase());
   pending.push(item);
-  saveAll();
-  entryModal.classList.add('hidden');
+
+  nameLibrary[name.toLowerCase()] = {
+  name,
+  desc: item.desc,
+  area: item.area
+};
+
+localStorage.setItem('nameLibrary', JSON.stringify(nameLibrary));
+
+const area = item.area.trim();
+if (area) {
+  const exists = areaLibrary.some(
+    a => a.toLowerCase() === area.toLowerCase()
+  );
+
+  if (!exists) {
+    areaLibrary.push(area);
+    localStorage.setItem('areaLibrary', JSON.stringify(areaLibrary));
+  }
+}
+
+saveAll();
+
+  entryName.value = '';
+  entryDate.value = todayStr();
+  entryAmount.value = '';
+  entryDesc.value = '';
+  entryArea.value = '';
+  areaSuggestions.classList.add('hidden');
+  entryName.focus();
   render();
 };
 
@@ -305,6 +434,13 @@ areaToggle.onclick = () => {
 
 closeSort.onclick = () => {
   sortModal.classList.add('hidden');
+};
+
+clearNameBtn.onclick = () => {
+  entryName.value = '';
+  nameSuggestions.classList.add('hidden');
+  clearNameBtn.classList.add('hidden');
+  entryName.focus();
 };
 
 

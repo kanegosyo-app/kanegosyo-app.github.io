@@ -82,12 +82,19 @@
   <div class="modal-box">
     <h3>New Entry</h3>
 
-    <input id="entryName" placeholder="Name">
+<div class="input-wrapper">
+  <input id="entryName" placeholder="Name">
+  <button id="clearNameBtn" class="clear-btn hidden">✕</button>
+</div>
+
+    <div id="nameSuggestions" class="suggestions hidden"></div>
+    <label class="field-label">Date</label>
     <input type="date" id="entryDate">
     <input type="number" id="entryAmount" placeholder="Amount">
     <textarea id="entryDesc" placeholder="Description"></textarea>
    <input id="entryArea"
    placeholder="Area (optional – client location)">
+   <div id="areaSuggestions" class="suggestions hidden"></div>
     <div class="modal-actions">
       <button id="saveEntry">Save</button>
       <button id="cancelEntry">Cancel</button>
