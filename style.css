@@ -12,6 +12,7 @@
   --sayangathinditayo: #151F1B;
 }
 
+
 * {
   box-sizing: border-box;
   font-family: monospace;
@@ -25,12 +26,17 @@ body {
 }
 
 .app-header {
-  padding: 5px;
+  padding: 20px;
+  position: relative;
   text-align: center;
   background: var(--panel);
   border-bottom: 2px solid var(--ink);
   background-color: var(--lovekita);
+  overflow: hidden;
 }
+
+
+
 
 .summary,
 .capital-actions,
@@ -238,7 +244,8 @@ section {
 .search-bar input {
   width: 100%;
   border-radius: 8px;
-  border: solid var(--accent)
+  border: solid var(--accent);
+  color: var(--ink);
 }
 
 .item-header {
@@ -295,3 +302,68 @@ section {
 .arrow.rotate {
   transform: rotate(180deg);
 }
+
+
+a,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  outline: none;
+  box-shadow: none;
+}
+
+button:focus,
+button:active,
+a:focus,
+a:active {
+  outline: none;
+  box-shadow: none;
+}
+
+button {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+
+button:active {
+  transform: scale(1.07);
+}
+
+.app-header {
+  position: relative; /* creates a stacking context */
+  padding: 20px;
+  text-align: center;
+  background-color: var(--lovekita);
+  overflow: hidden; /* keeps image inside header */
+}
+
+.header-image {
+  position: absolute;
+  inset: 0;              
+  margin: auto;
+  max-height: 200%;
+  max-width: 200%;
+  opacity: 0.25;  
+  z-index: 1;
+  pointer-events: none; 
+  background-size: 120px;
+}
+
+
+.app-header h1 {
+  position: relative;
+  z-index: 2;
+  font-size: 28px;
+  letter-spacing: 1px;
+}
+
