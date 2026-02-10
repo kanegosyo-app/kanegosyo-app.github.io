@@ -5,6 +5,7 @@ let pending = JSON.parse(localStorage.getItem('pending') || '[]');
 let delivered = JSON.parse(localStorage.getItem('delivered') || '[]');
 let currentTab = 'forDelivery';
 let searchQuery = '';
+let sortByArea = JSON.parse(localStorage.getItem('sortByArea') || 'false');
 
 
 const listSection = document.getElementById('listSection');
@@ -75,13 +76,14 @@ function render() {
   let list = [];
 
   if (searchQuery) {
-    const q = searchQuery.toLowerCase();
+  const q = searchQuery.toLowerCase();
 
-    list = getAllSearchableItems().filter(item =>
-      item.name.toLowerCase().includes(q) ||
-      item.date.includes(q)
-    );
-  } else {
+  list = getAllSearchableItems().filter(item =>
+    item.name.toLowerCase().includes(q) ||
+    item.date.includes(q) ||
+    (item.area && item.area.toLowerCase().includes(q)) // ✅ AREA SEARCH
+  );
+} else {
     if (currentTab === 'forDelivery') {
       list = getForDelivery();
     } else if (currentTab === 'pending') {
@@ -103,6 +105,19 @@ if (!searchQuery) {
   }
 }
 
+if (sortByArea) {
+  list.sort((a, b) => {
+    const areaA = (a.area || '').toLowerCase();
+    const areaB = (b.area || '').toLowerCase();
+
+    if (areaA !== areaB) {
+      return areaA.localeCompare(areaB);
+    }
+    return a.name.localeCompare(b.name);
+  });
+}
+
+
 
   list.forEach(item => {
   const div = document.createElement('div');
@@ -117,6 +132,11 @@ title.innerHTML = `
   <span class="arrow">▼</span>
   <span class="item-name">${item.name}</span>
   <span class="item-date">${item.date}</span>
+  ${
+    sortByArea && item.area
+      ? `<div class="item-area">${item.area}</div>`
+      : ''
+  }
 `;
 
 header.appendChild(title);
@@ -213,6 +233,7 @@ saveEntry.onclick = () => {
     date: entryDate.value,
     amount: Number(entryAmount.value || 0),
     desc: entryDesc.value.trim(),
+    area: entryArea.value.trim(),
     status: 'pending' 
   };
 
@@ -258,8 +279,33 @@ render();
 
 searchInput.addEventListener('input', () => {
   searchQuery = searchInput.value.trim();
+  clearSearchBtn.classList.toggle('hidden', !searchQuery);
   render();
 });
+
+clearSearchBtn.onclick = () => {
+  searchInput.value = '';
+  searchQuery = '';
+  clearSearchBtn.classList.add('hidden');
+  render();
+};
+
+
+floatingSortBtn.onclick = () => {
+  sortModal.classList.remove('hidden');
+  areaToggle.className = 'toggle ' + (sortByArea ? 'on' : 'off');
+};
+
+areaToggle.onclick = () => {
+  sortByArea = !sortByArea;
+  localStorage.setItem('sortByArea', JSON.stringify(sortByArea));
+  areaToggle.className = 'toggle ' + (sortByArea ? 'on' : 'off');
+  render();
+};
+
+closeSort.onclick = () => {
+  sortModal.classList.add('hidden');
+};
 
 
 if ('serviceWorker' in navigator) {

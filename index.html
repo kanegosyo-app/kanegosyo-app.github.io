@@ -29,10 +29,13 @@
 
 
 <div class="search-bar">
-  <input
-    id="searchInput"
-    placeholder="Search name or date (e.g. Juan or 2024-02-01)"
-  >
+  <div class="search-wrapper">
+    <input
+      id="searchInput"
+      placeholder="Search name, date, or area"
+    >
+    <button id="clearSearchBtn" class="clear-btn hidden">✕</button>
+  </div>
 </div>
 
 
@@ -72,9 +75,8 @@
 </div>
 
 <section id="listSection"></section>
-
+<button id="floatingSortBtn">⇅</button>
 <button id="floatingAddBtn">＋</button>
-
 
 <div class="modal hidden" id="entryModal">
   <div class="modal-box">
@@ -84,7 +86,8 @@
     <input type="date" id="entryDate">
     <input type="number" id="entryAmount" placeholder="Amount">
     <textarea id="entryDesc" placeholder="Description"></textarea>
-
+   <input id="entryArea"
+   placeholder="Area (optional – client location)">
     <div class="modal-actions">
       <button id="saveEntry">Save</button>
       <button id="cancelEntry">Cancel</button>
@@ -115,6 +118,22 @@
     </div>
   </div>
 </div>
+
+<div class="modal hidden" id="sortModal">
+  <div class="modal-box">
+    <h3>Sort by Area</h3>
+
+    <div class="toggle-box">
+      <span>Show & Sort by Area</span>
+      <div id="areaToggle" class="toggle off"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button id="closeSort">Close</button>
+    </div>
+  </div>
+</div>
+
 
 <script src="app.js"></script>
 </body>

@@ -248,6 +248,30 @@ section {
   color: var(--ink);
 }
 
+.search-wrapper {
+  position: relative;
+}
+
+.search-wrapper input {
+  padding-right: 38px; /* space for clear button */
+}
+
+.clear-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  background: var(--accent);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+
 .item-header {
   display: flex;
   justify-content: space-between;
@@ -365,5 +389,60 @@ button:active {
   z-index: 2;
   font-size: 28px;
   letter-spacing: 1px;
+}
+
+#floatingSortBtn {
+  position: fixed;
+  right: 88px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+  border-radius: 50%;
+}
+
+.toggle-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--accent);
+  padding: 10px;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.toggle {
+  width: 50px;
+  height: 26px;
+  border-radius: 20px;
+  background: red;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggle.on {
+  background: green;
+}
+
+.toggle.on::after {
+  transform: translateX(24px);
+}
+
+.item-area {
+  font-size: 12px;
+  opacity: 0.85;
 }
 
