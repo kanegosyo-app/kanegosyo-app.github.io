@@ -171,7 +171,7 @@ details.innerHTML = `
   <div><strong>Name:</strong> ${item.name}</div>
   <div><strong>Date:</strong> ${item.date}</div>
   <div><strong>Amount:</strong> ₱${item.amount.toLocaleString()}</div>
-  <div><strong>Description:</strong> ${item.desc || '-'}</div>
+  <<div><strong>Description:</strong> ${item.desc ? item.desc.replace(/\n/g, '<br>') : '-'}</div>
 `;
 
 header.onclick = () => {
