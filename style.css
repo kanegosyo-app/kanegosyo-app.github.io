@@ -18,26 +18,17 @@
   font-family: monospace;
   color: var(--kosmi);
 }
-html, body {
-  height: 100%;
-}
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
   margin: 0;
   background: var(--ikawlangmahalko);
   color: var(--ink);
 }
-.app-container {
-  width: 100%;
-  max-width: 480px; 
-  min-height: 100vh;
-  background: var(--ikawlangmahalko);
-  position: relative;
-}
 
+html, body {
+  touch-action: pan-x pan-y; 
+  overflow-x: hidden;        
+}
 
 .app-header {
   padding: 20px;
@@ -87,7 +78,8 @@ button {
 
 .tab {
   flex: 1;
-  padding: 10px;
+  padding: 8px;
+  font-weight: bold;
 }
 
 .tab.active {
@@ -102,8 +94,8 @@ button {
 }
 
 section {
-  height: 40vh;
-  min-height: 260px;
+  height: calc(100vh - 400px);
+  max-height: 100%;
   width: 97%;
   margin: auto;
   overflow-y: auto;
@@ -215,8 +207,11 @@ section {
 .tab-area {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  padding: 10px;
+  gap: 1px;
+  padding: 0;
+  max-width: 100%;
+  margin: 0 auto;
+  
 }
 
 .tabs {
@@ -247,10 +242,6 @@ section {
   font-size: 14px;
 }
 
-.tab-area {
-  max-width: 97%;
-  margin: 0 auto;
-}
 
 .search-bar {
   padding: 10px;
@@ -522,9 +513,10 @@ button:active {
   position: fixed;
   top: 1%;
   right: -100%;
-  width: 100%;
-  max-width: 480px;
+  width: 99%;
   height: 98%;
+  max-height: 100vh;
+  overflow-y: auto;
   background: var(--great);
   border-left: 3px solid var(--accent);
   transition: right 0.4s ease;
@@ -604,3 +596,6 @@ button:active {
   border-radius: 6px;
 }
 
+#floatingAddBtn, #floatingSortBtn {
+  bottom: env(safe-area-inset-bottom, 16px); 
+}
