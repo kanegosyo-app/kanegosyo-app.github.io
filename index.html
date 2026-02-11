@@ -10,7 +10,8 @@
       default-src 'self';
       script-src 'self';
       style-src 'self' 'unsafe-inline';
-      img-src 'self';
+      img-src 'self' blob:;
+      connect-src 'self' blob:;
       object-src 'none';
       base-uri 'none';
       frame-ancestors 'none';
@@ -190,6 +191,10 @@
   </div>
 
   <div id="transactionHistory" class="history-box"></div>
+  <div style="margin-top:10px;">
+  <button id="syncBtn">🔄 One-Click Sync</button>
+</div>
+
 
 </div>
 
@@ -252,6 +257,19 @@
   </div>
 </div>
 
+<div class="modal hidden" id="syncModal">
+  <div class="modal-box">
+    <h3 id="syncTitle">Device Sync</h3>
+    <div id="qrContainer"></div>
+    <div id="qrReader" style="width:100%; margin-top:10px;"></div>
+    <button id="closeSync">Cancel</button>
+  </div>
+</div>
+
+
+<script src="qrcode.min.js"></script>
+<script src="html5-qrcode.min.js"></script>
 <script src="app.js"></script>
+
 </body>
 </html>

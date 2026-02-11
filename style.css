@@ -491,12 +491,12 @@ button:active {
 .finance-toggle {
   position: fixed;
   right: 0;
-  top: 34%;
+  top: 33%;
   transform: translateY(-50%);
   width: 28px;
   height: 80px;
   border-radius: 12px 0 0 12px;
-  background: var(--accent);
+  background: var(--danger);
   color: var(--ink);
   font-size: 20px;
   z-index: 2000;

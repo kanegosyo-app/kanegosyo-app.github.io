@@ -16,7 +16,15 @@ let interestPercent = Number(localStorage.getItem('interestPercent') || 0);
 let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
 let currentCashType = '';
 let baseCapital = Number(localStorage.getItem('baseCapital') || 0);
+let pc;
+let channel;
+let html5Qr;
 
+const syncBtn = document.getElementById('syncBtn');
+const syncModal = document.getElementById('syncModal');
+const qrContainer = document.getElementById('qrContainer');
+const qrReaderDiv = document.getElementById('qrReader');
+const closeSync = document.getElementById('closeSync');
 const financePanel = document.getElementById('financePanel');
 const financeToggleBtn = document.getElementById('financeToggleBtn');
 const gcashDisplay = document.getElementById('gcashDisplay');
@@ -630,6 +638,151 @@ cancelCash.onclick = () =>
   cashModal.classList.add('hidden');
 
 updateFinanceUI();
+
+const rtcConfig = { iceServers: [] };
+
+async function generateKey() {
+  return crypto.subtle.generateKey(
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+}
+
+async function encryptData(key, data) {
+  const enc = new TextEncoder();
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const cipher = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    key,
+    enc.encode(data)
+  );
+  return {
+    iv: Array.from(iv),
+    data: Array.from(new Uint8Array(cipher))
+  };
+}
+
+async function decryptData(key, encrypted) {
+  const iv = new Uint8Array(encrypted.iv);
+  const data = new Uint8Array(encrypted.data);
+  const plain = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv },
+    key,
+    data
+  );
+  return new TextDecoder().decode(plain);
+}
+
+function getAppData() {
+  return JSON.stringify({
+    capital,
+    pending,
+    delivered,
+    nameLibrary,
+    areaLibrary,
+    gcashBal,
+    cohBal,
+    interestPercent,
+    transactions,
+    baseCapital
+  });
+}
+
+function mergeData(remote) {
+
+  remote.pending.forEach(r => {
+    if (!pending.find(l => l.name === r.name && l.date === r.date)) {
+      pending.push(r);
+    }
+  });
+
+  remote.delivered.forEach(r => {
+    if (!delivered.find(l => l.name === r.name && l.date === r.date)) {
+      delivered.push(r);
+    }
+  });
+
+  capital = Math.max(capital, remote.capital);
+  gcashBal += remote.gcashBal;
+  cohBal += remote.cohBal;
+
+  transactions = [...transactions, ...remote.transactions];
+
+  saveAll();
+  saveFinance();
+  render();
+  updateFinanceUI();
+}
+
+
+syncBtn.onclick = async () => {
+
+  syncModal.classList.remove('hidden');
+  qrContainer.innerHTML = '';
+  qrReaderDiv.innerHTML = '';
+
+  pc = new RTCPeerConnection(rtcConfig);
+
+  channel = pc.createDataChannel("sync");
+
+  channel.onopen = async () => {
+    const key = await generateKey();
+    const encrypted = await encryptData(key, getAppData());
+    channel.send(JSON.stringify(encrypted));
+  };
+
+  channel.onmessage = async e => {
+    const remote = JSON.parse(e.data);
+    mergeData(remote);
+    alert("Sync Complete 🔥");
+    syncModal.classList.add('hidden');
+  };
+
+  pc.onicecandidate = e => {
+    if (!e.candidate) {
+      new QRCode(qrContainer, {
+        text: JSON.stringify(pc.localDescription),
+        width: 250,
+        height: 250
+      });
+    }
+  };
+
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+
+  startScanner();
+};
+
+function startScanner() {
+
+  html5Qr = new Html5Qrcode("qrReader");
+
+  html5Qr.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    async (decodedText) => {
+
+      const remoteDesc = new RTCSessionDescription(JSON.parse(decodedText));
+      await pc.setRemoteDescription(remoteDesc);
+
+      if (remoteDesc.type === "offer") {
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+      }
+
+      html5Qr.stop();
+    }
+  );
+}
+
+closeSync.onclick = () => {
+  syncModal.classList.add('hidden');
+  if (html5Qr) html5Qr.stop();
+};
+
+
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
