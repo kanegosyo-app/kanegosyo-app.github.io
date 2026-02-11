@@ -147,23 +147,35 @@
 <div class="finance-header">
     <h2>Gcash Cash-In / Cash-Out</h2>
   </div>
+  
   <div class="finance-top">
+    <div class="finance-summary">
+  <div class="summary-box">
+    <label>Total Capital</label>
+    <input id="totalFinanceCapital" readonly>
+  </div>
+
+  <div class="summary-box">
+    <label>Total Profit</label>
+    <input id="totalFinanceProfit" readonly>
+  </div>
+</div>
 
     <div class="balance-boxes">
       <div class="mini-box">
-        Gcash Bal:
+        Gcash Balance:
         <input id="gcashDisplay" readonly>
       </div>
 
       <div class="mini-box">
-        COH:
+        Cash on Hand:
         <input id="cohDisplay" readonly>
       </div>
 
       <div class="mini-box">
         Interest:
         <input id="interestDisplay" readonly>
-        <button id="setInterestBtn">Set%</button>
+        <button id="setInterestBtn">Set Interest</button>
       </div>
     </div>
 
@@ -196,8 +208,8 @@
   <div class="modal-box">
     <h3>Set Capital</h3>
     <div style="display:flex; gap:8px;">
-      <input type="number" id="setGcashInput" placeholder="Gcash Bal">
-      <input type="number" id="setCohInput" placeholder="COH">
+      <input type="number" id="setGcashInput" placeholder="Gcash Balance">
+      <input type="number" id="setCohInput" placeholder="Cash on Hand">
     </div>
     <div class="modal-actions">
       <button id="saveSetCapital">Save</button>
@@ -210,8 +222,8 @@
   <div class="modal-box">
     <h3>Spend Capital</h3>
     <div style="display:flex; gap:8px;">
-      <input type="number" id="spendGcashInput" placeholder="Deduct Gcash">
-      <input type="number" id="spendCohInput" placeholder="Deduct COH">
+      <input type="number" id="spendGcashInput" placeholder="Deduct Gcash Balance">
+      <input type="number" id="spendCohInput" placeholder="Deduct Cash on Hand">
     </div>
     <div class="modal-actions">
       <button id="saveSpendCapital">Save</button>

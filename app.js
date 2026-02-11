@@ -15,6 +15,7 @@ let cohBal = Number(localStorage.getItem('cohBal') || 0);
 let interestPercent = Number(localStorage.getItem('interestPercent') || 0);
 let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
 let currentCashType = '';
+let baseCapital = Number(localStorage.getItem('baseCapital') || 0);
 
 const financePanel = document.getElementById('financePanel');
 const financeToggleBtn = document.getElementById('financeToggleBtn');
@@ -23,6 +24,9 @@ const cohDisplay = document.getElementById('cohDisplay');
 const interestDisplay = document.getElementById('interestDisplay');
 const transactionHistory = document.getElementById('transactionHistory');
 const listSection = document.getElementById('listSection');
+const totalFinanceCapital = document.getElementById('totalFinanceCapital');
+const totalFinanceProfit = document.getElementById('totalFinanceProfit');
+
 
 function saveAll() {
   localStorage.setItem('capital', capital);
@@ -466,8 +470,23 @@ function updateFinanceUI() {
   cohDisplay.value = "₱ " + cohBal.toLocaleString();
   interestDisplay.value = interestPercent + "%";
 
-  transactionHistory.innerHTML = '';
+  const currentTotal = gcashBal + cohBal;
 
+  let remainingCapital = Math.max(
+    0,
+    Math.min(currentTotal, baseCapital)
+  );
+
+  let remainingProfit = currentTotal - baseCapital;
+  remainingProfit = Math.max(0, remainingProfit);
+
+  totalFinanceCapital.value =
+    "₱ " + remainingCapital.toLocaleString();
+
+  totalFinanceProfit.value =
+    "₱ " + remainingProfit.toLocaleString();
+
+  transactionHistory.innerHTML = '';
   transactions.slice().reverse().forEach(t => {
     const div = document.createElement('div');
     div.style.marginBottom = "6px";
@@ -504,18 +523,23 @@ cancelInterest.onclick = () =>
 
 
 setCapitalBtn.onclick = () => {
-  setGcashInput.value = gcashBal;
-  setCohInput.value = cohBal;
+  setGcashInput.value = '';
+  setCohInput.value = '';
   setCapitalModal.classList.remove('hidden');
 };
 
 saveSetCapital.onclick = () => {
   gcashBal = Number(setGcashInput.value || 0);
   cohBal = Number(setCohInput.value || 0);
+
+  baseCapital = gcashBal + cohBal; 
+
+  localStorage.setItem('baseCapital', baseCapital);
   saveFinance();
   updateFinanceUI();
   setCapitalModal.classList.add('hidden');
 };
+
 
 cancelSetCapital.onclick = () =>
   setCapitalModal.classList.add('hidden');

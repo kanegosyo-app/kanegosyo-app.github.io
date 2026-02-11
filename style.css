@@ -491,7 +491,7 @@ button:active {
 .finance-toggle {
   position: fixed;
   right: 0;
-  top: 25%;
+  top: 34%;
   transform: translateY(-50%);
   width: 28px;
   height: 80px;
@@ -569,4 +569,22 @@ button:active {
   color: var(--kosmi);
 }
 
+.finance-summary {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.summary-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.summary-box input {
+  background: var(--accent);
+  font-weight: bold;
+  border-radius: 6px;
+}
 
