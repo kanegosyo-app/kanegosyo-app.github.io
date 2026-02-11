@@ -10,8 +10,18 @@ const nameSuggestions = document.getElementById('nameSuggestions');
 const clearNameBtn = document.getElementById('clearNameBtn');
 let searchQuery = '';
 let sortByArea = JSON.parse(localStorage.getItem('sortByArea') || 'false');
+let gcashBal = Number(localStorage.getItem('gcashBal') || 0);
+let cohBal = Number(localStorage.getItem('cohBal') || 0);
+let interestPercent = Number(localStorage.getItem('interestPercent') || 0);
+let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+let currentCashType = '';
 
-
+const financePanel = document.getElementById('financePanel');
+const financeToggleBtn = document.getElementById('financeToggleBtn');
+const gcashDisplay = document.getElementById('gcashDisplay');
+const cohDisplay = document.getElementById('cohDisplay');
+const interestDisplay = document.getElementById('interestDisplay');
+const transactionHistory = document.getElementById('transactionHistory');
 const listSection = document.getElementById('listSection');
 
 function saveAll() {
@@ -171,7 +181,7 @@ details.innerHTML = `
   <div><strong>Name:</strong> ${item.name}</div>
   <div><strong>Date:</strong> ${item.date}</div>
   <div><strong>Amount:</strong> ₱${item.amount.toLocaleString()}</div>
-  <<div><strong>Description:</strong> ${item.desc ? item.desc.replace(/\n/g, '<br>') : '-'}</div>
+  <div><strong>Description:</strong> ${item.desc ? item.desc.replace(/\n/g, '<br>') : '-'}</div>
 `;
 
 header.onclick = () => {
@@ -443,6 +453,159 @@ clearNameBtn.onclick = () => {
   entryName.focus();
 };
 
+
+function saveFinance() {
+  localStorage.setItem('gcashBal', gcashBal);
+  localStorage.setItem('cohBal', cohBal);
+  localStorage.setItem('interestPercent', interestPercent);
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+}
+
+function updateFinanceUI() {
+  gcashDisplay.value = "₱ " + gcashBal.toLocaleString();
+  cohDisplay.value = "₱ " + cohBal.toLocaleString();
+  interestDisplay.value = interestPercent + "%";
+
+  transactionHistory.innerHTML = '';
+
+  transactions.slice().reverse().forEach(t => {
+    const div = document.createElement('div');
+    div.style.marginBottom = "6px";
+    div.textContent =
+      `${t.type}: ₱${t.amount.toLocaleString()} | ${t.date} | Interest: ₱${t.interest.toLocaleString()}`;
+    transactionHistory.appendChild(div);
+  });
+}
+
+financeToggleBtn.onclick = () => {
+  financePanel.classList.toggle('open');
+  financeToggleBtn.textContent =
+    financePanel.classList.contains('open') ? '>' : '<';
+};
+
+
+setInterestBtn.onclick = () => {
+  interestInput.value = interestPercent;
+  interestModal.classList.remove('hidden');
+};
+
+saveInterest.onclick = () => {
+  const val = Number(interestInput.value);
+  if (val >= 0.1 && val <= 100) {
+    interestPercent = val;
+    saveFinance();
+    updateFinanceUI();
+    interestModal.classList.add('hidden');
+  }
+};
+
+cancelInterest.onclick = () =>
+  interestModal.classList.add('hidden');
+
+
+setCapitalBtn.onclick = () => {
+  setGcashInput.value = gcashBal;
+  setCohInput.value = cohBal;
+  setCapitalModal.classList.remove('hidden');
+};
+
+saveSetCapital.onclick = () => {
+  gcashBal = Number(setGcashInput.value || 0);
+  cohBal = Number(setCohInput.value || 0);
+  saveFinance();
+  updateFinanceUI();
+  setCapitalModal.classList.add('hidden');
+};
+
+cancelSetCapital.onclick = () =>
+  setCapitalModal.classList.add('hidden');
+
+spendCapitalBtn.onclick = () => {
+  spendGcashInput.value = '';
+  spendCohInput.value = '';
+  spendCapitalModal.classList.remove('hidden');
+};
+
+saveSpendCapital.onclick = () => {
+  gcashBal -= Number(spendGcashInput.value || 0);
+  cohBal -= Number(spendCohInput.value || 0);
+  saveFinance();
+  updateFinanceUI();
+  spendCapitalModal.classList.add('hidden');
+};
+
+cancelSpendCapital.onclick = () =>
+  spendCapitalModal.classList.add('hidden');
+
+cashInBtn.onclick = () => openCashModal('Cash-in');
+cashOutBtn.onclick = () => openCashModal('Cash-out');
+
+function openCashModal(type) {
+  currentCashType = type;
+  cashModalTitle.textContent = type;
+  cashInterestDisplay.value = interestPercent + "%";
+  cashAmountInput.value = '';
+  cashInterestAmount.value = '';
+  cashModal.classList.remove('hidden');
+}
+
+cashAmountInput.addEventListener('input', () => {
+  const amount = Number(cashAmountInput.value || 0);
+  let interestAmount = 0;
+
+  if (amount === 0) {
+    cashInterestAmount.value = '';
+    return;
+  }
+
+  if (amount < 500) {
+    interestAmount = 5;
+  } else {
+    interestAmount = amount * (interestPercent / 100);
+  }
+
+  cashInterestAmount.value =
+    "₱ " + interestAmount.toLocaleString();
+});
+
+saveCash.onclick = () => {
+  const amount = Number(cashAmountInput.value || 0);
+  if (!amount) return;
+
+  let interestAmount =
+    amount < 500 ? 5 : amount * (interestPercent / 100);
+
+  const total = amount + interestAmount;
+
+  if (currentCashType === 'Cash-in') {
+
+    gcashBal -= amount;
+    cohBal += total;
+  } else {
+    cohBal -= amount;
+    gcashBal += total;
+  }
+  
+  transactions.push({
+    type: currentCashType,
+    amount,
+    interest: interestAmount,
+    date: new Date().toLocaleString()
+  });
+
+  if (transactions.length > 100) {
+    transactions.shift();
+  }
+
+  saveFinance();
+  updateFinanceUI();
+  cashModal.classList.add('hidden');
+};
+
+cancelCash.onclick = () =>
+  cashModal.classList.add('hidden');
+
+updateFinanceUI();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

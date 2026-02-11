@@ -141,6 +141,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3000;
 }
 
 .hidden {
@@ -485,4 +486,87 @@ button:active {
 .input-wrapper input {
   padding-right: 38px; 
 }
+
+
+.finance-toggle {
+  position: fixed;
+  right: 0;
+  top: 25%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 80px;
+  border-radius: 12px 0 0 12px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 20px;
+  z-index: 2000;
+}
+
+
+.finance-panel {
+  position: fixed;
+  top: 1%;
+  right: -100%;
+  width: 99%;
+  height: 98%;
+  background: var(--great);
+  border-left: 3px solid var(--accent);
+  transition: right 0.4s ease;
+  padding: 15px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+}
+
+.finance-panel.open {
+  right: 0;
+}
+
+.balance-boxes {
+  display: flex;
+  gap: 8px;
+}
+
+.mini-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.mini-box input {
+  background: var(--accent);
+  font-weight: bold;
+}
+
+.cash-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.history-box {
+  margin-top: 15px;
+  flex: 1;
+  overflow-y: auto;
+  border: 2px solid var(--accent);
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--sayangathinditayo);
+}
+
+.finance-header {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+  text-align: center;
+}
+
+.finance-header h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--kosmi);
+}
+
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kanegosyo-v106';
+const CACHE_NAME = 'kanegosyo-v114';
 
 const ASSETS = [
   '/',
