@@ -639,7 +639,13 @@ cancelCash.onclick = () =>
 
 updateFinanceUI();
 
-const rtcConfig = { iceServers: [] };
+const rtcConfig = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" }
+  ]
+};
+
+
 
 async function generateKey() {
   return crypto.subtle.generateKey(
@@ -724,19 +730,21 @@ syncBtn.onclick = async () => {
 
   pc = new RTCPeerConnection(rtcConfig);
 
-  channel = pc.createDataChannel("sync");
+  pc.ondatachannel = event => {
+    channel = event.channel;
 
-  channel.onopen = async () => {
-    const key = await generateKey();
-    const encrypted = await encryptData(key, getAppData());
-    channel.send(JSON.stringify(encrypted));
+    channel.onmessage = e => {
+      const remote = JSON.parse(e.data);
+      mergeData(remote);
+      alert("Sync Complete 🔥");
+      syncModal.classList.add('hidden');
+    };
   };
 
-  channel.onmessage = async e => {
-    const remote = JSON.parse(e.data);
-    mergeData(remote);
-    alert("Sync Complete 🔥");
-    syncModal.classList.add('hidden');
+  channel = pc.createDataChannel("sync");
+
+  channel.onopen = () => {
+    channel.send(getAppData());
   };
 
   pc.onicecandidate = e => {
@@ -764,15 +772,28 @@ function startScanner() {
     { fps: 10, qrbox: 250 },
     async (decodedText) => {
 
-      const remoteDesc = new RTCSessionDescription(JSON.parse(decodedText));
-      await pc.setRemoteDescription(remoteDesc);
+      try {
+        const remoteDesc = new RTCSessionDescription(JSON.parse(decodedText));
+        await pc.setRemoteDescription(remoteDesc);
 
-      if (remoteDesc.type === "offer") {
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
+        if (remoteDesc.type === "offer") {
+
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+
+          new QRCode(qrContainer, {
+            text: JSON.stringify(pc.localDescription),
+            width: 250,
+            height: 250
+          });
+
+        }
+
+        html5Qr.stop();
+
+      } catch (err) {
+        console.error(err);
       }
-
-      html5Qr.stop();
     }
   );
 }

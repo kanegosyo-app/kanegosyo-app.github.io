@@ -18,12 +18,26 @@
   font-family: monospace;
   color: var(--kosmi);
 }
+html, body {
+  height: 100%;
+}
 
 body {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
   margin: 0;
   background: var(--ikawlangmahalko);
   color: var(--ink);
 }
+.app-container {
+  width: 100%;
+  max-width: 480px; 
+  min-height: 100vh;
+  background: var(--ikawlangmahalko);
+  position: relative;
+}
+
 
 .app-header {
   padding: 20px;
@@ -88,7 +102,8 @@ button {
 }
 
 section {
-  height: 300px;
+  height: 40vh;
+  min-height: 260px;
   width: 97%;
   margin: auto;
   overflow-y: auto;
@@ -507,7 +522,8 @@ button:active {
   position: fixed;
   top: 1%;
   right: -100%;
-  width: 99%;
+  width: 100%;
+  max-width: 480px;
   height: 98%;
   background: var(--great);
   border-left: 3px solid var(--accent);
