@@ -25,6 +25,7 @@
 <header class="app-header">
   <img src="logo.png" alt="" class="header-image">
   <h1>KaNegosyo App</h1>
+  <p>Easily sort your deliveries and Track profit</p>
 </header>
 
 
@@ -75,6 +76,8 @@
 </div>
 
 <section id="listSection"></section>
+<button id="floatingGuideBtn">📖</button>
+<button id="floatingBackupBtn">💾</button>
 <button id="floatingSortBtn">⇅</button>
 <button id="floatingAddBtn">＋</button>
 
@@ -146,6 +149,7 @@
 <div id="financePanel" class="finance-panel">
 <div class="finance-header">
     <h2>Gcash Cash-In / Cash-Out</h2>
+    <p>Bellow ₱500 transactions, interest is fixed to ₱5 and the set interest will only apply to ₱501 and up transactions.</p>
   </div>
   
   <div class="finance-top">
@@ -251,6 +255,110 @@
     </div>
   </div>
 </div>
+
+<div class="modal hidden" id="backupModal">
+  <div class="modal-box">
+    <h3>Backup & Restore</h3>
+
+    <input type="password" id="backupPassword" placeholder="Enter Password">
+
+    <div class="modal-actions">
+      <button id="createBackupBtn">Backup</button>
+      <button id="restoreBackupBtn">Restore</button>
+    </div>
+
+    <input type="file" id="restoreFileInput" accept=".json" hidden>
+
+    <div class="modal-actions">
+      <button id="closeBackupModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal hidden" id="guideModal">
+  <div class="guide-box">
+    <h2 class="guide-title">
+      This is you guide on how to use the KaNegosyo App
+    </h2>
+
+    <div class="guide-content">
+
+      <h3>📦 Delivery System</h3>
+
+      <p><strong>1. Pag Add Bag-o nga Delivery</strong><br>
+      I-click ang ➕ nga button sa idalom. Butangi sang ngalan, petsa, amount, description kag area. Dayon i-save.</p>
+
+      <p><strong>2. For Delivery Tab</strong><br>
+      Diri makita ang mga delivery nga due subong nga adlaw. Pwede mo i-click ang ✔ kung delivered na.</p>
+
+      <p><strong>3. Pending Delivery Tab</strong><br>
+      Mga future nga delivery nga wala pa nag abot ang petsa.</p>
+
+      <p><strong>4. Overdue Delivery Tab</strong><br>
+      Mga delivery nga nalampasan na ang petsa kag wala pa na deliver.</p>
+
+      <p><strong>5. Delivered Tab</strong><br>
+      Mga na deliver na nga entries. Maximum 50 entries ang ginastore.</p>
+
+      <p><strong>6. Search Bar</strong><br>
+      Pwede ka mag search sang name, petsa ukon area.</p>
+
+      <p><strong>7. Sort by Area</strong><br>
+      I-click ang ⇅ nga button kag i-on ang toggle kung gusto mo ma sort base sa area.</p>
+
+      <hr>
+
+      <h3>💰 Capital System</h3>
+
+      <p><strong>8. Add Capital</strong><br>
+      I-click ang Add Capital kag butang sang amount para madugangan ang base capital mo.</p>
+
+      <p><strong>9. Spend Capital</strong><br>
+      I-click ang Spend kung may gin gasto ka halin sa capital.</p>
+
+      <hr>
+
+      <h3>🏦 GCash Cash-In / Cash-Out Panel</h3>
+
+      <p><strong>10. Pag Open Finance Panel</strong><br>
+      I-click ang arrow nga button sa kilid para mag slide ang panel.</p>
+
+      <p><strong>11. Set Capital</strong><br>
+      Butangi sang Gcash Balance kag Cash on Hand. Ini ang base capital mo.</p>
+
+      <p><strong>12. Set Interest</strong><br>
+      Pwede mo bag-uhon ang interest percent. Kung below ₱500 automatic ₱5 fixed interest.</p>
+
+      <p><strong>13. Cash-In</strong><br>
+      Halin sa Gcash pakadto Cash on Hand. Automatic ma compute ang interest kag profit.</p>
+
+      <p><strong>14. Cash-Out</strong><br>
+      Halin sa Cash on Hand pakadto Gcash. Automatic man ang interest calculation.</p>
+
+      <p><strong>15. Transaction History</strong><br>
+      Sa idalom makita mo ang tanan nga cash transactions nga gin himo mo.</p>
+
+      <hr>
+
+      <h3>💾 Backup & Restore</h3>
+
+      <p><strong>16. Backup</strong><br>
+      I-click ang 💾 button. Butangi sang password kag i-click Backup. Ma download ang encrypted file.</p>
+
+      <p><strong>17. Restore</strong><br>
+      I-click Restore kag pili-a ang backup file. Kinahanglan pareho ang password.</p>
+
+      <p><strong>18. Fully Offline</strong><br>
+      Ang app naga store sang data sa localStorage. Wala ini server kag backend.</p>
+
+    </div>
+
+    <div class="modal-actions">
+      <button id="closeGuideModal">Close</button>
+    </div>
+  </div>
+</div>
+
 
 <script src="app.js"></script>
 </body>

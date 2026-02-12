@@ -16,15 +16,13 @@ let interestPercent = Number(localStorage.getItem('interestPercent') || 0);
 let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
 let currentCashType = '';
 let baseCapital = Number(localStorage.getItem('baseCapital') || 0);
-let pc;
-let channel;
-let html5Qr;
-
-const syncBtn = document.getElementById('syncBtn');
-const syncModal = document.getElementById('syncModal');
-const qrContainer = document.getElementById('qrContainer');
-const qrReaderDiv = document.getElementById('qrReader');
-const closeSync = document.getElementById('closeSync');
+const floatingBackupBtn = document.getElementById('floatingBackupBtn');
+const backupModal = document.getElementById('backupModal');
+const backupPassword = document.getElementById('backupPassword');
+const createBackupBtn = document.getElementById('createBackupBtn');
+const restoreBackupBtn = document.getElementById('restoreBackupBtn');
+const restoreFileInput = document.getElementById('restoreFileInput');
+const closeBackupModal = document.getElementById('closeBackupModal');
 const financePanel = document.getElementById('financePanel');
 const financeToggleBtn = document.getElementById('financeToggleBtn');
 const gcashDisplay = document.getElementById('gcashDisplay');
@@ -34,7 +32,9 @@ const transactionHistory = document.getElementById('transactionHistory');
 const listSection = document.getElementById('listSection');
 const totalFinanceCapital = document.getElementById('totalFinanceCapital');
 const totalFinanceProfit = document.getElementById('totalFinanceProfit');
-
+const floatingGuideBtn = document.getElementById('floatingGuideBtn');
+const guideModal = document.getElementById('guideModal');
+const closeGuideModal = document.getElementById('closeGuideModal');
 
 function saveAll() {
   localStorage.setItem('capital', capital);
@@ -639,170 +639,115 @@ cancelCash.onclick = () =>
 
 updateFinanceUI();
 
-const rtcConfig = {
-  iceServers: [
-    { urls: "stun:stun.l.google.com:19302" }
-  ]
+function simpleEncrypt(text, password) {
+  return btoa(
+    text.split('').map((c, i) =>
+      String.fromCharCode(
+        c.charCodeAt(0) ^ password.charCodeAt(i % password.length)
+      )
+    ).join('')
+  );
+}
+
+function simpleDecrypt(encoded, password) {
+  try {
+    const text = atob(encoded);
+    return text.split('').map((c, i) =>
+      String.fromCharCode(
+        c.charCodeAt(0) ^ password.charCodeAt(i % password.length)
+      )
+    ).join('');
+  } catch {
+    return null;
+  }
+}
+
+floatingBackupBtn.onclick = () => {
+  backupPassword.value = '';
+  backupModal.classList.remove('hidden');
 };
 
-
-
-async function generateKey() {
-  return crypto.subtle.generateKey(
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
-}
-
-async function encryptData(key, data) {
-  const enc = new TextEncoder();
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const cipher = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    key,
-    enc.encode(data)
-  );
-  return {
-    iv: Array.from(iv),
-    data: Array.from(new Uint8Array(cipher))
-  };
-}
-
-async function decryptData(key, encrypted) {
-  const iv = new Uint8Array(encrypted.iv);
-  const data = new Uint8Array(encrypted.data);
-  const plain = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
-    key,
-    data
-  );
-  return new TextDecoder().decode(plain);
-}
-
-function getAppData() {
-  return JSON.stringify({
-    capital,
-    pending,
-    delivered,
-    nameLibrary,
-    areaLibrary,
-    gcashBal,
-    cohBal,
-    interestPercent,
-    transactions,
-    baseCapital
-  });
-}
-
-function mergeData(remote) {
-
-  remote.pending.forEach(r => {
-    if (!pending.find(l => l.name === r.name && l.date === r.date)) {
-      pending.push(r);
-    }
-  });
-
-  remote.delivered.forEach(r => {
-    if (!delivered.find(l => l.name === r.name && l.date === r.date)) {
-      delivered.push(r);
-    }
-  });
-
-  capital = Math.max(capital, remote.capital);
-  gcashBal += remote.gcashBal;
-  cohBal += remote.cohBal;
-
-  transactions = [...transactions, ...remote.transactions];
-
-  saveAll();
-  saveFinance();
-  render();
-  updateFinanceUI();
-}
-
-
-syncBtn.onclick = async () => {
-
-  syncModal.classList.remove('hidden');
-  qrContainer.innerHTML = '';
-  qrReaderDiv.innerHTML = '';
-
-  pc = new RTCPeerConnection(rtcConfig);
-
-  pc.ondatachannel = event => {
-    channel = event.channel;
-
-    channel.onmessage = e => {
-      const remote = JSON.parse(e.data);
-      mergeData(remote);
-      alert("Sync Complete 🔥");
-      syncModal.classList.add('hidden');
-    };
-  };
-
-  channel = pc.createDataChannel("sync");
-
-  channel.onopen = () => {
-    channel.send(getAppData());
-  };
-
-  pc.onicecandidate = e => {
-    if (!e.candidate) {
-      new QRCode(qrContainer, {
-        text: JSON.stringify(pc.localDescription),
-        width: 250,
-        height: 250
-      });
-    }
-  };
-
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
-
-  startScanner();
+closeBackupModal.onclick = () => {
+  backupModal.classList.add('hidden');
 };
 
-function startScanner() {
+createBackupBtn.onclick = () => {
+  const password = backupPassword.value.trim();
+  if (!password) return alert('Enter password first');
 
-  html5Qr = new Html5Qrcode("qrReader");
+  const data = {};
 
-  html5Qr.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    async (decodedText) => {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    data[key] = localStorage.getItem(key);
+  }
+
+  const json = JSON.stringify(data);
+  const encrypted = simpleEncrypt(json, password);
+
+  const blob = new Blob([encrypted], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "KaNegosyo_Backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  alert("Backup created successfully!");
+};
+
+restoreBackupBtn.onclick = () => {
+  const password = backupPassword.value.trim();
+  if (!password) return alert('Enter password first');
+
+  restoreFileInput.click();
+
+  restoreFileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const encrypted = event.target.result;
+      const decrypted = simpleDecrypt(encrypted, password);
+
+      if (!decrypted) {
+        alert("Wrong password or corrupted file!");
+        return;
+      }
 
       try {
-        const remoteDesc = new RTCSessionDescription(JSON.parse(decodedText));
-        await pc.setRemoteDescription(remoteDesc);
+        const data = JSON.parse(decrypted);
 
-        if (remoteDesc.type === "offer") {
+        localStorage.clear();
 
-          const answer = await pc.createAnswer();
-          await pc.setLocalDescription(answer);
-
-          new QRCode(qrContainer, {
-            text: JSON.stringify(pc.localDescription),
-            width: 250,
-            height: 250
-          });
-
+        for (const key in data) {
+          localStorage.setItem(key, data[key]);
         }
 
-        html5Qr.stop();
+        alert("Restore successful! Reloading...");
+        location.reload();
 
-      } catch (err) {
-        console.error(err);
+      } catch {
+        alert("Invalid backup file!");
       }
-    }
-  );
-}
+    };
 
-closeSync.onclick = () => {
-  syncModal.classList.add('hidden');
-  if (html5Qr) html5Qr.stop();
+    reader.readAsText(file);
+  };
 };
 
+
+floatingGuideBtn.onclick = () => {
+  guideModal.classList.remove('hidden');
+};
+
+closeGuideModal.onclick = () => {
+  guideModal.classList.add('hidden');
+};
 
 
 if ('serviceWorker' in navigator) {
