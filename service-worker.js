@@ -1,11 +1,12 @@
-const CACHE_NAME = 'kanegosyo-v157';
+const CACHE_NAME = 'kanegosyo-v158';
 
 const ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
-  '/manifest.json'
+  '/manifest.json',
+  'logo.png'
 ];
 
 
