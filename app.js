@@ -1,3 +1,11 @@
+
+if (!navigator.onLine) {
+  console.log("Offline mode active");
+}
+window.fetch = function () {
+  return Promise.reject(new Error("Network disabled in offline-locked mode"));
+};
+
 const MAX_DELIVERED = 50;
 
 let capital = Number(localStorage.getItem('capital') || 0);
@@ -793,8 +801,10 @@ if (window.matchMedia('(display-mode: standalone)').matches) {
 
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js');
+  window.addEventListener('load', async () => {
+    const reg = await navigator.serviceWorker.register('./service-worker.js');
+    if (reg.update) {
+      reg.update = () => {}; 
+    }
   });
 }
-
