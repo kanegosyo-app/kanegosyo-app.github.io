@@ -1,6 +1,31 @@
 <div align="center">
 
 # 📦 KaNegosyo App  
+<div align="center">
+
+# 📦 KaNegosyo App
+
+### 👨‍💻 Developer: **KevinDGreat**
+
+<sub>App Latest Version: **v1.1.1**</sub>
+
+---
+
+## 🌐 Official Links
+
+🔹 **Official Website**  
+https://kanegosyo.github.io  
+
+🔹 **KaNegosyo App**  
+https://kanegosyo-app.githib.io  
+
+---
+
+### 🚀 100% Offline • 🔐 Private • 📱 Installable (PWA)
+
+</div>
+
+
 ### Offline-First Delivery & Micro-Finance Tracker
 
 ![PWA](https://img.shields.io/badge/PWA-Enabled-blue)
