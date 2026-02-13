@@ -1,13 +1,9 @@
 <div align="center">
-
-# 📦 KaNegosyo App  
-<div align="center">
-
+  
 # 📦 KaNegosyo App
+<sub>App Latest Version: **v1.1.1**</sub>
 
 ### 👨‍💻 Developer: **KevinDGreat**
-
-<sub>App Latest Version: **v1.1.1**</sub>
 
 ---
 
