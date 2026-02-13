@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kanegosyo-v159';
+const CACHE_NAME = 'kanegosyo-v160';
 
 const ASSETS = [
   '/',
@@ -6,7 +6,7 @@ const ASSETS = [
   '/style.css',
   '/app.js',
   '/manifest.json',
-  'logo.png'
+  '/logo.png'
 ];
 
 

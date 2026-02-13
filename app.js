@@ -16,6 +16,10 @@ let interestPercent = Number(localStorage.getItem('interestPercent') || 0);
 let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
 let currentCashType = '';
 let baseCapital = Number(localStorage.getItem('baseCapital') || 0);
+let deferredPrompt;
+const installBanner = document.getElementById('installBanner');
+const installBtn = document.getElementById('installBtn');
+const dismissInstallBtn = document.getElementById('dismissInstallBtn');
 const floatingBackupBtn = document.getElementById('floatingBackupBtn');
 const backupModal = document.getElementById('backupModal');
 const backupPassword = document.getElementById('backupPassword');
@@ -748,6 +752,44 @@ floatingGuideBtn.onclick = () => {
 closeGuideModal.onclick = () => {
   guideModal.classList.add('hidden');
 };
+
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); 
+  deferredPrompt = e;
+
+  if (!window.matchMedia('(display-mode: standalone)').matches) {
+    installBanner.classList.remove('hidden');
+  }
+});
+
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+
+  if (outcome === 'accepted') {
+    installBanner.classList.add('hidden');
+  }
+
+  deferredPrompt = null;
+});
+
+
+dismissInstallBtn.addEventListener('click', () => {
+  installBanner.classList.add('hidden');
+  localStorage.setItem('installBannerDismissed', 'true');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBanner.classList.add('hidden');
+});
+
+if (window.matchMedia('(display-mode: standalone)').matches) {
+  installBanner.classList.add('hidden');
+}
 
 
 if ('serviceWorker' in navigator) {
