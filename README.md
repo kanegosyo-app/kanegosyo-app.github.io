@@ -13,7 +13,7 @@
 https://kanegosyo.github.io  
 
 🔹 **KaNegosyo App**  
-https://kanegosyo-app.githib.io  
+https://kanegosyo-app.github.io  
 
 ---
 
