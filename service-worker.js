@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kanegosyo-v2-FROZEN'; 
+const CACHE_NAME = 'kanegosyo-v4-FROZEN'; 
 const ASSETS = [
   './',
   './index.html',
