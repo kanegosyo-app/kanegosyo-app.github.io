@@ -104,6 +104,7 @@
 </div>
 
 <section id="listSection"></section>
+<button id="floatingThemeBtn">🎨</button>
 <button id="floatingGuideBtn">📖</button>
 <button id="floatingBackupBtn">💾</button>
 <button id="floatingSortBtn">⇅</button>
@@ -302,6 +303,32 @@
     </div>
   </div>
 </div>
+
+<div class="modal hidden" id="themeModal">
+  <div class="modal-box">
+    <h3>Select Theme</h3>
+
+    <div class="toggle-box">
+      <span>Default Theme</span>
+      <div id="defaultThemeToggle" class="toggle"></div>
+    </div>
+
+    <div class="toggle-box">
+      <span>Dark Mode</span>
+      <div id="darkThemeToggle" class="toggle"></div>
+    </div>
+
+    <div class="toggle-box">
+      <span>Light Mode</span>
+      <div id="lightThemeToggle" class="toggle"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button id="closeThemeModal">Close</button>
+    </div>
+  </div>
+</div>
+
 
 <div class="modal hidden" id="guideModal">
   <div class="guide-box">

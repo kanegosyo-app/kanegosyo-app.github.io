@@ -10,6 +10,17 @@
   --lovekita: #293E36;
   --ikawlangmahalko: #1F2F29;
   --sayangathinditayo: #151F1B;
+  --kevintisoy: #ffffff;
+  --kevinisme: #4b6b5c;
+  --sheng: #344D43;
+  --tibaghak: #1F2F29;
+  --amaw: #1F2F29;
+  --cloie: #2b2b2b;
+  --mahalkita: #344D43;
+  --alammoba: #2b2b2b;
+  --sayang: #4b6b5c;
+  --manok: #2b2b2b;
+  --napula: #11433d;
 }
 
 
@@ -59,13 +70,13 @@ html, body {
 input, textarea, button {
   width: 100%;
   padding: 8px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--tibaghak);
   background: var(--panel);
 }
 
 button {
   cursor: pointer;
-  background-color: #cc9503;
+  background-color: var(--kevin);
   border-radius: 10px;
   max-width: 150px;
   margin: 2px;
@@ -84,7 +95,7 @@ button {
 
 .tab.active {
   background: var(--accent);
-  color: white;
+  color: var(--kevintisoy);
 }
 
 .receivable {
@@ -98,14 +109,14 @@ section {
   width: 97%;
   margin: auto;
   overflow-y: auto;
-  border: 2px solid var(--great);
+  border: 2px solid var(--mahalkita);
   border-radius: 10px;
   background: var(--sayangathinditayo);
 }
 
 .item {
   background: var(--great);
-  border: 2px solid var(--ink);
+  border: 2px solid var(--alammoba);
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
@@ -167,12 +178,12 @@ section {
 .modal-box textarea {
   background-color: var(--accent);
   color: var(--kosmi);
-  border: 2px solid var(--bg);
+  border: 2px solid var(--napula);
 }
 
 .modal-box input::placeholder,
 .modal-box textarea::placeholder {
-  color: rgba(161, 229, 220, 0.6); 
+  color: var(--kosmi); 
 }
 
 
@@ -221,7 +232,7 @@ section {
 .tab {
   grid-row: 1;
   max-width: none;
-  color: var(--ink)
+  color: var(--amaw)
 }
 
 .counts {
@@ -251,8 +262,8 @@ section {
 .search-bar input {
   width: 100%;
   border-radius: 8px;
-  border: solid var(--accent);
-  color: var(--ink);
+  border: solid var(--kevinisme);
+  color: var(--cloie);
 }
 
 .search-wrapper {
@@ -260,7 +271,7 @@ section {
 }
 
 .search-wrapper input {
-  padding-right: 38px; /* space for clear button */
+  padding-right: 38px;
 }
 
 .clear-btn {
@@ -371,11 +382,11 @@ button:active {
 }
 
 .app-header {
-  position: relative; /* creates a stacking context */
+  position: relative; 
   padding: 20px;
   text-align: center;
   background-color: var(--lovekita);
-  overflow: hidden; /* keeps image inside header */
+  overflow: hidden; 
 }
 
 .header-image {
@@ -474,7 +485,7 @@ button:active {
 
 .suggestions {
   background: var(--panel);
-  border: 2px solid var(--bg);
+  border: 2px solid var(--napula);
   border-top: none;
   max-height: 140px;
   overflow-y: auto;
@@ -485,7 +496,7 @@ button:active {
 .suggestion-item {
   padding: 8px;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--manok);
 }
 
 .suggestion-item:hover {
@@ -573,7 +584,7 @@ button:active {
   margin-top: 15px;
   flex: 1;
   overflow-y: auto;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--sayang);
   padding: 10px;
   border-radius: 10px;
   background: var(--sayangathinditayo);
@@ -655,10 +666,23 @@ button:active {
   line-height: 1.6;
 }
 
+#floatingThemeBtn {
+  position: fixed;
+  right: 304px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+  border-radius: 50%;
+  background-color: var(--danger);
+}
+
+
 #floatingAddBtn, 
 #floatingSortBtn,
 #floatingBackupBtn,
-#floatingGuideBtn {
+#floatingGuideBtn,
+#floatingThemeBtn {
   bottom: env(safe-area-inset-bottom, 16px);
 }
 
@@ -718,3 +742,52 @@ button:active {
   pointer-events: none; 
 }
 
+body.dark-theme {
+  --bg: #111111;
+  --panel: #C2C2C2; /* search bar bg*/
+  --ink: #B0B0B0;
+  --accent: #111111;
+  --danger: #2b2b2b; /* buttons bg*/
+  --great: #2b2b2b;
+  --lovekita: #2b2b2b;
+  --sayangathinditayo: #111111;
+  --kosmi: #e6e2d8; /*font color*/
+  --ikawlangmahalko: #2b2b2b;
+  --kevin: #404040;  /*button tab*/
+  --kevintisoy: #BDBDBD;
+  --kevinisme: #BDBDBD;
+  --sheng: #B0B0B0;
+  --tibaghak: #505050;
+  --amaw: #707070;
+  --cloie: #111111;
+  --mahalkita: #606060;
+  --alammoba: #707070;
+  --sayang: #707070;
+  --manok: #2b2b2b;
+   --napula: #505050;
+}
+
+body.light-theme {
+  --bg: #111111;
+  --panel: #e6e2d8; /* search bar bg*/
+  --ink: #111111;
+  --accent: #E5E4E2;
+  --danger: #C2C2C2; /* buttons bg*/
+  --great: #E5E4E2;
+  --lovekita: #DCDCDC;
+  --sayangathinditayo: #e6e2d8;
+  --kosmi: #111111; /*font color*/
+  --ikawlangmahalko: #BDBDBD;
+  --kevin: #ADADAD;
+  --kevintisoy: #111111;
+  --kevinisme: #111111;
+  --sheng: #111111;
+   --tibaghak: #404040;
+   --amaw: #404040;
+   --cloie: #111111;
+   --mahalkita: #111111;
+   --alammoba: #111111;
+   --sayang: #111111;
+   --manok: #111111;
+   --napula: #111111;
+}

@@ -47,6 +47,15 @@ const totalFinanceProfit = document.getElementById('totalFinanceProfit');
 const floatingGuideBtn = document.getElementById('floatingGuideBtn');
 const guideModal = document.getElementById('guideModal');
 const closeGuideModal = document.getElementById('closeGuideModal');
+const floatingThemeBtn = document.getElementById('floatingThemeBtn');
+const themeModal = document.getElementById('themeModal');
+const closeThemeModal = document.getElementById('closeThemeModal');
+
+const defaultThemeToggle = document.getElementById('defaultThemeToggle');
+const darkThemeToggle = document.getElementById('darkThemeToggle');
+const lightThemeToggle = document.getElementById('lightThemeToggle');
+
+let currentTheme = localStorage.getItem('appTheme') || 'default';
 
 function saveAll() {
   localStorage.setItem('capital', capital);
@@ -439,6 +448,7 @@ document.querySelectorAll('.tab').forEach(t => {
 
 autoUpdateStatuses();
 render();
+applyTheme(currentTheme);
 
 searchInput.addEventListener('input', () => {
   searchQuery = searchInput.value.trim();
@@ -808,3 +818,37 @@ if ('serviceWorker' in navigator) {
     }
   });
 }
+
+
+function applyTheme(theme) {
+  document.body.classList.remove('dark-theme', 'light-theme');
+
+  if (theme === 'dark') {
+    document.body.classList.add('dark-theme');
+  } 
+  else if (theme === 'light') {
+    document.body.classList.add('light-theme');
+  }
+
+  localStorage.setItem('appTheme', theme);
+  currentTheme = theme;
+  updateThemeToggles();
+}
+
+function updateThemeToggles() {
+  defaultThemeToggle.className = 'toggle ' + (currentTheme === 'default' ? 'on' : 'off');
+  darkThemeToggle.className = 'toggle ' + (currentTheme === 'dark' ? 'on' : 'off');
+  lightThemeToggle.className = 'toggle ' + (currentTheme === 'light' ? 'on' : 'off');
+}
+
+floatingThemeBtn.onclick = () => {
+  themeModal.classList.remove('hidden');
+};
+
+closeThemeModal.onclick = () => {
+  themeModal.classList.add('hidden');
+};
+
+defaultThemeToggle.onclick = () => applyTheme('default');
+darkThemeToggle.onclick = () => applyTheme('dark');
+lightThemeToggle.onclick = () => applyTheme('light');
